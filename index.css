@@ -1,0 +1,58 @@
+/* ===== Dropetsy.gab — Minimal Dark ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg: #0a0a0a;
+  --bg-panel: #111111;
+  --bg-card: #161616;
+  --bg-input: #0e0e0e;
+  --bg-hover: #1a1a1a;
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.12);
+  --accent: #2563eb;
+  --accent-dim: rgba(37,99,235,0.15);
+  --white: #ffffff;
+  --t1: #f5f5f5;
+  --t2: #a0a0a0;
+  --t3: #555555;
+  --t4: #333333;
+}
+
+* { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+/* Scrollbar */
+.scrollbar-thin::-webkit-scrollbar { width: 3px; }
+.scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 99px; }
+.scrollbar-thin::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
+.animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slide-up { animation: slideUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+
+/* Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255,255,255,0.03) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 12px;
+}
+
+/* Interactive */
+button, a, input, textarea, select { transition: all 0.2s ease; }
+input:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 0 2px var(--accent); }
+
+/* Selection */
+::selection { background: rgba(37,99,235,0.3); color: white; }
+
+/* Status dots */
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; }
+.status-dot-idle { width: 6px; height: 6px; border-radius: 50%; background: var(--t4); }
+.status-dot-error { width: 6px; height: 6px; border-radius: 50%; background: #ef4444; }
