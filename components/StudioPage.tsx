@@ -14,10 +14,12 @@ interface StudioPageProps {
   onExecute: (prompts: string[], models: string[], refImages: UploadedImage[]) => void;
   generatedImages: GeneratedImage[];
   isGenerating: boolean;
+  onDeleteGenImage: (id: string) => void;
+  onResetAll: () => void;
 }
 
 const StudioPage: React.FC<StudioPageProps> = ({
-  userApiKey, isApiKeyValid, refImages, onImageUpload, onRemoveImage, onExecute, generatedImages, isGenerating
+  userApiKey, isApiKeyValid, refImages, onImageUpload, onRemoveImage, onExecute, generatedImages, isGenerating, onDeleteGenImage, onResetAll
 }) => {
   const [prompt, setPrompt] = useState('');
   const [engine, setEngine] = useState(GEMINI_IMAGE_MODEL_FLASH);
@@ -49,7 +51,12 @@ const StudioPage: React.FC<StudioPageProps> = ({
       {/* Left Panel */}
       <div className="w-[380px] shrink-0 bg-[#111] border-r border-white/[0.06] flex flex-col overflow-y-auto scrollbar-thin">
         <div className="p-7 flex-1">
-          <h2 className="text-lg font-semibold text-white mb-1">Studio</h2>
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-lg font-semibold text-white">Studio</h2>
+            {(generatedImages.length > 0 || refImages.length > 0) && (
+              <button onClick={() => { onResetAll(); setPrompt(''); }} className="text-[11px] text-white/20 hover:text-red-400/70 transition-colors">New product</button>
+            )}
+          </div>
           <p className="text-[13px] text-white/30 mb-8">Quick create from a prompt.</p>
 
           {/* Reference images */}
@@ -136,9 +143,14 @@ const StudioPage: React.FC<StudioPageProps> = ({
                   ) : (
                     <>
                       <img src={img.url!} className="w-full aspect-square object-cover cursor-pointer hover:opacity-90 transition-opacity" alt="" onClick={() => setSelectedImgIndex(idx)} />
-                      <button onClick={() => downloadImage(img.url!, 'dropetsy')} className="absolute top-2.5 right-2.5 p-2 bg-black/60 backdrop-blur-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity text-white/70 hover:text-white">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                      </button>
+                      <div className="absolute top-2.5 right-2.5 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={() => downloadImage(img.url!, 'dropetsy')} className="p-2 bg-black/60 backdrop-blur-sm rounded-lg text-white/70 hover:text-white">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                        <button onClick={() => onDeleteGenImage(img.id)} className="p-2 bg-black/60 backdrop-blur-sm rounded-lg text-white/70 hover:text-red-400">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                        </button>
+                      </div>
                     </>
                   )}
                 </div>

@@ -27,6 +27,9 @@ function App() {
   const [architectRefImages, setArchitectRefImages] = useState<UploadedImage[]>([]);
   const [architectGenImages, setArchitectGenImages] = useState<GeneratedImage[]>([]);
   const [isArchitectGenerating, setIsArchitectGenerating] = useState(false);
+  const [architectPrompts, setArchitectPrompts] = useState<string[]>([]);
+  const [architectPromptModels, setArchitectPromptModels] = useState<string[]>([]);
+  const [architectPromptCounts, setArchitectPromptCounts] = useState<number[]>([]);
 
   // Studio state
   const [studioRefImages, setStudioRefImages] = useState<UploadedImage[]>([]);
@@ -80,30 +83,24 @@ function App() {
 
     setGenerating(true);
     const initial: GeneratedImage[] = prompts.map((p, i) => ({
-      id: `img-${i}-${Date.now()}`, url: null, prompt: p, loading: true
+      id: `img-${Date.now()}-${i}-${Math.random().toString(36).slice(2)}`, url: null, prompt: p, loading: true
     }));
-    setImages(initial);
+    // Append to existing images instead of replacing
+    setImages(prev => [...prev, ...initial]);
 
     let currentIndex = 0;
     const execute = async () => {
       const batch = [];
       for (let i = 0; i < IMAGE_GENERATION_CONCURRENCY_LIMIT && currentIndex < initial.length; i++) {
         const taskIdx = currentIndex++;
+        const imgId = initial[taskIdx].id;
         const model = models[taskIdx] || GEMINI_IMAGE_MODEL_FLASH;
         batch.push((async () => {
           try {
             const url = await generateImage(userApiKey, initial[taskIdx].prompt, { inAndOutMode: true }, refImages, model);
-            setImages(prev => {
-              const next = [...prev];
-              next[taskIdx] = { ...next[taskIdx], url, loading: false };
-              return next;
-            });
+            setImages(prev => prev.map(img => img.id === imgId ? { ...img, url, loading: false } : img));
           } catch (e: any) {
-            setImages(prev => {
-              const next = [...prev];
-              next[taskIdx] = { ...next[taskIdx], loading: false, error: e.message };
-              return next;
-            });
+            setImages(prev => prev.map(img => img.id === imgId ? { ...img, loading: false, error: e.message } : img));
           }
         })());
       }
@@ -171,6 +168,14 @@ function App() {
           onGenerateImages={handleArchitectGenerate}
           generatedImages={architectGenImages}
           isGenerating={isArchitectGenerating}
+          onDeleteGenImage={(id) => setArchitectGenImages(prev => prev.filter(img => img.id !== id))}
+          onResetAll={() => { setArchitectRefImages([]); setArchitectGenImages([]); setArchitectPrompts([]); setArchitectPromptModels([]); setArchitectPromptCounts([]); }}
+          savedPrompts={architectPrompts}
+          savedPromptModels={architectPromptModels}
+          savedPromptCounts={architectPromptCounts}
+          onPromptsChange={setArchitectPrompts}
+          onPromptModelsChange={setArchitectPromptModels}
+          onPromptCountsChange={setArchitectPromptCounts}
         />
       )}
 
@@ -187,6 +192,8 @@ function App() {
           onExecute={handleStudioExecute}
           generatedImages={studioGenImages}
           isGenerating={isStudioGenerating}
+          onDeleteGenImage={(id) => setStudioGenImages(prev => prev.filter(img => img.id !== id))}
+          onResetAll={() => { setStudioRefImages([]); setStudioGenImages([]); }}
         />
       )}
 
@@ -203,6 +210,7 @@ function App() {
               setFicheProduitImageMimeType('image/jpeg');
             }
           }}
+          onResetAll={() => { setFicheProduitImageBase64(null); setFicheProduitImageMimeType(null); }}
         />
       )}
     </div>

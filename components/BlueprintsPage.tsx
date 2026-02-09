@@ -9,10 +9,11 @@ interface BlueprintsPageProps {
   ficheProduitImageBase64: string | null;
   ficheProduitImageMimeType: string | null;
   onImageUpload: (files: FileList | null) => void;
+  onResetAll: () => void;
 }
 
 const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
-  userApiKey, isApiKeyValid, ficheProduitImageBase64, ficheProduitImageMimeType, onImageUpload
+  userApiKey, isApiKeyValid, ficheProduitImageBase64, ficheProduitImageMimeType, onImageUpload, onResetAll
 }) => {
   const [productName, setProductName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -58,7 +59,12 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
       {/* Left Panel */}
       <div className="w-[380px] shrink-0 bg-[#111] border-r border-white/[0.06] flex flex-col overflow-y-auto scrollbar-thin">
         <div className="p-7 flex-1">
-          <h2 className="text-lg font-semibold text-white mb-1">Blueprints</h2>
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="text-lg font-semibold text-white">Blueprints</h2>
+            {(ficheProduitImageBase64 || seoResult) && (
+              <button onClick={() => { onResetAll(); setProductName(''); setSeoResult(null); setEditableTitle(''); setEditableDescription(''); setEditableTags(''); }} className="text-[11px] text-white/20 hover:text-red-400/70 transition-colors">New product</button>
+            )}
+          </div>
           <p className="text-[13px] text-white/30 mb-8">Generate an optimized Etsy listing.</p>
 
           {/* Image upload */}
