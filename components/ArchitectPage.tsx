@@ -36,7 +36,6 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
   // Per-prompt config for phase 2
   const [promptModels, setPromptModels] = useState<string[]>([]);
   const [promptCounts, setPromptCounts] = useState<number[]>([]);
-  const [phase, setPhase] = useState<'input' | 'prompts'>('input');
   const [selectedImgIndex, setSelectedImgIndex] = useState<number | null>(null);
 
   const nextImage = () => {
@@ -66,6 +65,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
         ? selectedDA.map(s => s.prompt).join(' | NEXT STYLE: ')
         : customDA || 'automatically analyzed based on the product type. Create a logically perfect, hyper-realistic, high-end environment.';
 
+      const brandBrain = localStorage.getItem('brandBrain') || '';
       const res = await generatePrompts(
         userApiKey,
         dataInput || null,
@@ -73,12 +73,12 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
         refImages,
         customDA,
         true,
-        numPrompts
+        numPrompts,
+        brandBrain
       );
       setGeneratedPrompts(res);
       setPromptModels(res.map(() => GEMINI_IMAGE_MODEL_FLASH));
       setPromptCounts(res.map(() => 1));
-      setPhase('prompts');
     } catch (e: any) {
       alert(e.message || 'Error generating prompts');
     } finally {
@@ -115,159 +115,158 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
   return (
     <div className="flex flex-1 overflow-hidden">
-      {/* Left Panel */}
+      {/* Left Panel — Always input */}
       <div className="w-[380px] shrink-0 bg-[#111] border-r border-white/[0.06] flex flex-col overflow-y-auto scrollbar-thin">
         <div className="p-7 flex-1">
           <h2 className="text-lg font-semibold text-white mb-1">Architect</h2>
           <p className="text-[13px] text-white/30 mb-8">Configure your product shoot.</p>
 
-          {phase === 'input' ? (
-            <>
-              {/* Visual Assets */}
-              <div className="mb-7">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[12px] font-medium text-white/50">Reference images</span>
-                  <span className="text-[11px] text-white/20">{refImages.length}</span>
+          {/* Visual Assets */}
+          <div className="mb-7">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[12px] font-medium text-white/50">Reference images</span>
+              <span className="text-[11px] text-white/20">{refImages.length}</span>
+            </div>
+            <div className="flex flex-wrap gap-2.5">
+              {refImages.map(img => (
+                <div key={img.id} className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/[0.06] group">
+                  <img src={`data:${img.mimeType};base64,${img.data}`} className="w-full h-full object-cover" alt="" />
+                  <button onClick={() => onRemoveImage(img.id)} className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <svg className="w-3.5 h-3.5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round"/></svg>
+                  </button>
                 </div>
-                <div className="flex flex-wrap gap-2.5">
-                  {refImages.map(img => (
-                    <div key={img.id} className="relative w-16 h-16 rounded-xl overflow-hidden border border-white/[0.06] group">
-                      <img src={`data:${img.mimeType};base64,${img.data}`} className="w-full h-full object-cover" alt="" />
-                      <button onClick={() => onRemoveImage(img.id)} className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                        <svg className="w-3.5 h-3.5 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round"/></svg>
-                      </button>
-                    </div>
-                  ))}
-                  <label className="w-16 h-16 rounded-xl border border-dashed border-white/10 flex items-center justify-center cursor-pointer hover:border-white/25 hover:bg-white/[0.02] transition-all">
-                    <svg className="w-5 h-5 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="1.5" strokeLinecap="round"/></svg>
-                    <input type="file" className="hidden" multiple accept="image/*" onChange={e => onImageUpload(e.target.files)} />
-                  </label>
-                </div>
-              </div>
+              ))}
+              <label className="w-16 h-16 rounded-xl border border-dashed border-white/10 flex items-center justify-center cursor-pointer hover:border-white/25 hover:bg-white/[0.02] transition-all">
+                <svg className="w-5 h-5 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                <input type="file" className="hidden" multiple accept="image/*" onChange={e => onImageUpload(e.target.files)} />
+              </label>
+            </div>
+          </div>
 
-              {/* Data Input */}
-              <div className="mb-7">
-                <span className="text-[12px] font-medium text-white/50 block mb-2.5">Product details</span>
-                <textarea
-                  value={dataInput}
-                  onChange={e => setDataInput(e.target.value)}
-                  placeholder="Describe your product..."
-                  className="w-full h-24 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/15 resize-none focus:border-[#2563eb]"
-                />
-              </div>
+          {/* Data Input */}
+          <div className="mb-7">
+            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Product details</span>
+            <textarea
+              value={dataInput}
+              onChange={e => setDataInput(e.target.value)}
+              placeholder="Describe your product..."
+              className="w-full h-24 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/15 resize-none focus:border-[#2563eb]"
+            />
+          </div>
 
-              {/* Style Matrix */}
-              <div className="mb-7">
-                <span className="text-[12px] font-medium text-white/50 block mb-2.5">Design aesthetic</span>
-                <div className="space-y-1">
-                  {STYLE_MATRIX.map(style => (
-                    <button
-                      key={style.id}
-                      onClick={() => toggleStyle(style.id)}
-                      className={`w-full text-left px-3.5 py-2 rounded-lg text-[12px] transition-all ${
-                        selectedStyles.includes(style.id)
-                          ? 'bg-white/[0.08] text-white font-medium'
-                          : 'text-white/30 hover:text-white/50 hover:bg-white/[0.02]'
-                      }`}
-                    >
-                      {style.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
+          {/* Style Matrix */}
+          <div className="mb-7">
+            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Design aesthetic</span>
+            <div className="space-y-1">
+              {STYLE_MATRIX.map(style => (
+                <button
+                  key={style.id}
+                  onClick={() => toggleStyle(style.id)}
+                  className={`w-full text-left px-3.5 py-2 rounded-lg text-[12px] transition-all ${
+                    selectedStyles.includes(style.id)
+                      ? 'bg-white/[0.08] text-white font-medium'
+                      : 'text-white/30 hover:text-white/50 hover:bg-white/[0.02]'
+                  }`}
+                >
+                  {style.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-              {/* Custom DA */}
-              <div className="mb-7">
-                <span className="text-[12px] font-medium text-white/50 block mb-2.5">Custom directive <span className="text-white/15">optional</span></span>
-                <textarea
-                  value={customDA}
-                  onChange={e => setCustomDA(e.target.value)}
-                  placeholder="Add custom visual direction..."
-                  className="w-full h-20 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/15 resize-none focus:border-[#2563eb]"
-                />
-              </div>
+          {/* Custom DA */}
+          <div className="mb-7">
+            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Custom directive <span className="text-white/15">optional</span></span>
+            <textarea
+              value={customDA}
+              onChange={e => setCustomDA(e.target.value)}
+              placeholder="Add custom visual direction..."
+              className="w-full h-20 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/15 resize-none focus:border-[#2563eb]"
+            />
+          </div>
 
-              {/* Prompt count */}
-              <div className="mb-8">
-                <span className="text-[12px] font-medium text-white/50 block mb-2.5">Number of prompts</span>
-                <div className="flex gap-1.5 flex-wrap">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
-                    <button
-                      key={n}
-                      onClick={() => setNumPrompts(n)}
-                      className={`w-9 h-9 rounded-lg text-[12px] font-medium transition-all ${
-                        numPrompts === n
-                          ? 'bg-white text-black'
-                          : 'text-white/25 hover:text-white/50 hover:bg-white/[0.04]'
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center justify-between mb-5">
-                <button onClick={() => setPhase('input')} className="text-[12px] text-white/30 hover:text-white/60 transition-colors">← Back</button>
-                <span className="text-[11px] text-white/20">{totalImages} images</span>
-              </div>
-
-              <div className="flex gap-2 mb-4">
-                <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_FLASH)} className="flex-1 py-2 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/60 border border-white/[0.06] hover:bg-white/[0.08]">All Flash</button>
-                <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_PRO)} className="flex-1 py-2 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/60 border border-white/[0.06] hover:bg-white/[0.08]">All Pro</button>
-              </div>
-              <div className="flex gap-1.5 mb-5">
-                {[1, 2, 3, 4].map(n => (
-                  <button key={n} onClick={() => setAllCounts(n)} className="flex-1 py-1.5 rounded-lg text-[11px] text-white/25 hover:text-white/50 hover:bg-white/[0.03]">{n}x all</button>
-                ))}
-              </div>
-
-              <div className="space-y-2 flex-1 overflow-y-auto scrollbar-thin pr-1">
-                {generatedPrompts.map((prompt, i) => (
-                  <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3.5">
-                    <p className="text-[11px] text-white/40 leading-relaxed mb-3 line-clamp-3">{prompt}</p>
-                    <div className="flex items-center gap-2">
-                      <select
-                        value={promptModels[i]}
-                        onChange={e => { const next = [...promptModels]; next[i] = e.target.value; setPromptModels(next); }}
-                        className="flex-1 bg-black/30 border border-white/[0.06] rounded-lg px-2.5 py-1.5 text-[11px] text-white/70 cursor-pointer"
-                      >
-                        <option value={GEMINI_IMAGE_MODEL_FLASH}>Flash</option>
-                        <option value={GEMINI_IMAGE_MODEL_PRO}>Pro</option>
-                      </select>
-                      <div className="flex gap-1">
-                        {[1, 2, 3, 4].map(n => (
-                          <button key={n} onClick={() => { const next = [...promptCounts]; next[i] = n; setPromptCounts(next); }}
-                            className={`w-7 h-7 rounded-lg text-[10px] font-medium transition-all ${promptCounts[i] === n ? 'bg-white text-black' : 'text-white/20 hover:text-white/40'}`}>{n}</button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+          {/* Prompt count */}
+          <div className="mb-8">
+            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Number of prompts</span>
+            <div className="flex gap-1.5 flex-wrap">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
+                <button
+                  key={n}
+                  onClick={() => setNumPrompts(n)}
+                  className={`w-9 h-9 rounded-lg text-[12px] font-medium transition-all ${
+                    numPrompts === n
+                      ? 'bg-white text-black'
+                      : 'text-white/25 hover:text-white/50 hover:bg-white/[0.04]'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="p-7 pt-0">
-          {phase === 'input' ? (
-            <button onClick={handleInitialize} disabled={isLoadingPrompts || !isApiKeyValid}
-              className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
-              {isLoadingPrompts ? <LoadingSpinner size="sm" color="text-black" message="Generating..." /> : 'Generate prompts'}
-            </button>
-          ) : (
-            <button onClick={handleExecute} disabled={isGenerating || !isApiKeyValid}
-              className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
-              {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Rendering..." /> : 'Generate images'}
-            </button>
-          )}
+          <button onClick={handleInitialize} disabled={isLoadingPrompts || !isApiKeyValid}
+            className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
+            {isLoadingPrompts ? <LoadingSpinner size="sm" color="text-black" message="Generating..." /> : 'Generate prompts'}
+          </button>
         </div>
       </div>
 
-      {/* Right: Output */}
+      {/* Right Panel — Prompts + Images */}
       <div className="flex-1 bg-[#0a0a0a] overflow-y-auto scrollbar-thin">
+        {/* Prompts Section (appears after generation) */}
+        {generatedPrompts.length > 0 && (
+          <div className="border-b border-white/[0.06] p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <h3 className="text-[13px] font-medium text-white/70">Prompts</h3>
+                <span className="text-[11px] text-white/20 bg-white/[0.04] px-2.5 py-0.5 rounded-full">{generatedPrompts.length} prompts · {totalImages} images</span>
+              </div>
+              <div className="flex gap-2">
+                <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_FLASH)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Flash</button>
+                <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_PRO)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Pro</button>
+                <div className="flex gap-1 ml-1">
+                  {[1, 2, 3, 4].map(n => (
+                    <button key={n} onClick={() => setAllCounts(n)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{n}x</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 mb-4">
+              {generatedPrompts.map((prompt, i) => (
+                <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3.5 hover:border-white/[0.08] transition-all">
+                  <p className="text-[11px] text-white/40 leading-relaxed mb-3 line-clamp-2">{prompt}</p>
+                  <div className="flex items-center gap-2">
+                    <select
+                      value={promptModels[i]}
+                      onChange={e => { const next = [...promptModels]; next[i] = e.target.value; setPromptModels(next); }}
+                      className="flex-1 bg-black/30 border border-white/[0.06] rounded-lg px-2.5 py-1.5 text-[11px] text-white/70 cursor-pointer"
+                    >
+                      <option value={GEMINI_IMAGE_MODEL_FLASH}>Flash</option>
+                      <option value={GEMINI_IMAGE_MODEL_PRO}>Pro</option>
+                    </select>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4].map(n => (
+                        <button key={n} onClick={() => { const next = [...promptCounts]; next[i] = n; setPromptCounts(next); }}
+                          className={`w-7 h-7 rounded-lg text-[10px] font-medium transition-all ${promptCounts[i] === n ? 'bg-white text-black' : 'text-white/20 hover:text-white/40'}`}>{n}</button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button onClick={handleExecute} disabled={isGenerating || !isApiKeyValid}
+              className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
+              {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Rendering..." /> : `Generate ${totalImages} images`}
+            </button>
+          </div>
+        )}
+
+        {/* Images Grid */}
         {generatedImages.length > 0 ? (
           <div className="p-6">
             <div className="grid grid-cols-2 xl:grid-cols-3 gap-3">
@@ -289,11 +288,11 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
               ))}
             </div>
           </div>
-        ) : (
+        ) : generatedPrompts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-[14px] text-white/10">{phase === 'prompts' ? 'Ready to render' : 'No images yet'}</p>
+            <p className="text-[14px] text-white/10">No images yet</p>
           </div>
-        )}
+        ) : null}
       </div>
 
       <Modal isOpen={selectedImgIndex !== null} onClose={() => setSelectedImgIndex(null)}>

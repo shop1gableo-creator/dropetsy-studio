@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, GenerateContentResponse, Part } from "@google/genai";
-import { GEMINI_TEXT_MODEL, GEMINI_IMAGE_MODEL_PRO, GEMINI_IMAGE_MODEL_FLASH, GEMINI_SEO_MODEL, API_KEY_MISSING_MESSAGE } from '../constants';
+import { GEMINI_TEXT_MODEL, GEMINI_IMAGE_MODEL_PRO, GEMINI_IMAGE_MODEL_FLASH, GEMINI_SEO_MODEL, API_KEY_MISSING_MESSAGE, SEO_IMAGE_POSITIONS } from '../constants';
 import { SeoResult, UploadedImage } from '../types';
 
 const getGeminiClient = (apiKey: string) => {
@@ -30,34 +30,57 @@ export async function generatePrompts(
   referenceImages: UploadedImage[] = [],
   chatInput: string = "",
   inAndOutMode: boolean = false,
-  numPrompts: number = 12
+  numPrompts: number = 12,
+  brandBrain: string = ""
 ): Promise<string[]> {
   const ai = getGeminiClient(apiKey);
   const parts: Part[] = [];
   
   let backgroundInstruction = backgroundContext;
   if (backgroundContext.includes("automatically analyzed")) {
-    backgroundInstruction = `ANALYZE PRODUCT FIRST: Detect product category and materials. 
-CREATE CONTEXT: Design an environment that is "realistic to death" (très réaliste à mort). 
-Atmospheric, logical, high-end lifestyle settings only. Use descriptors like "natural sunlight", "soft window bokeh", "organic high-end home", or "authentic street texture". 
-Avoid sterile AI backgrounds. Ensure the product feels integrated into a real space. Cinematic hyper-realism.`;
+    backgroundInstruction = `ANALYZE PRODUCT FIRST: Detect product category, materials, size, target audience. 
+CREATE CONTEXT: Design environments that are "realistic to death". 
+Use descriptors like "natural sunlight streaming through window", "soft window bokeh", "organic high-end Scandinavian home", "authentic artisan workshop", "warm morning kitchen counter", "premium marble vanity". 
+Avoid sterile AI backgrounds. The product must feel INTEGRATED into a real space. Cinematic hyper-realism.`;
   }
 
-  let textPrompt = `You are a world-class professional product photographer. Generate exactly ${numPrompts} unique image prompts for the product in the reference.
+  // Build the SEO positions reference for the AI
+  const seoPositionsRef = SEO_IMAGE_POSITIONS.map((pos, i) => 
+    `${i + 1}. ${pos.label}: ${pos.prompt}`
+  ).join('\n');
 
-**CORE RULES:**
-1. **PRODUCT IDENTITY**: The subject MUST remain 100% identical. Every logo, texture, and shape.
-2. **REALISM**: Backgrounds must be ultra-realistic, cinematic, and professional. Use "realistic to death" style.
-3. **VARIETY**: Use different angles (45°, flatlay, macro, lifestyle, eye-level).
-4. **CONTEXT**: ${backgroundInstruction}.
-5. **FORMAT**: Just ${numPrompts} lines of plain text. NO BOLD. NO ASTERISKS.`;
+  let textPrompt = `You are an ELITE Etsy product photographer and SEO visual strategist. You create prompts that generate images which SELL on Etsy, Amazon, and Shopify.
+
+Generate exactly ${numPrompts} unique, highly detailed image prompts for the product shown in the reference images.
+
+=== MASTER SEO IMAGE POSITIONS (use these as your framework) ===
+${seoPositionsRef}
+
+=== ABSOLUTE RULES ===
+1. PRODUCT IDENTITY: The subject MUST remain 100% identical — every logo, texture, color, shape, and material. ZERO creative liberty on the product itself.
+2. ULTRA-REALISM: Every image must look like it was shot by a $5000/day photographer. "Realistic to death" — real shadows, real reflections, real light behavior.
+3. STRATEGIC VARIETY: Distribute prompts across different SEO positions above. Each prompt = different angle, different mood, different conversion intent.
+4. LONG & DETAILED: Each prompt must be 40-80 words minimum. Include lighting direction, surface material, atmosphere, color temperature, camera angle, depth of field.
+5. ETSY-OPTIMIZED: Think about what makes a buyer CLICK and BUY. Hero shots for thumbnails, lifestyle for emotional connection, close-ups for trust.
+6. BACKGROUND CONTEXT: ${backgroundInstruction}
+7. FORMAT: Return ONLY ${numPrompts} lines of plain text prompts. NO numbering, NO bold, NO asterisks, NO markdown. One prompt per line.
+
+=== PROVEN PROMPT PATTERNS ===
+- "Product centered on [surface], [lighting type], [atmosphere], [camera angle], [lens effect], professional product photography, 8k, hyper-detailed"
+- "Close-up of [product feature] showing [material texture], [lighting], shallow depth of field, macro lens, premium craftsmanship"
+- "[Product] in [lifestyle setting], [time of day lighting], [mood], editorial photography, high-end magazine aesthetic"
+- "[Product] on [dark/light surface], [dramatic/soft] lighting, rim light highlighting [feature], luxury branding style"`;
+
+  if (brandBrain && brandBrain.trim()) {
+    textPrompt += `\n\n=== BRAND CONTEXT (respect this) ===\n${brandBrain}`;
+  }
 
   if (inAndOutMode) {
-    textPrompt += `\n\n**IN-AND-OUT PROTOCOL**: Preserve pixel-perfect branding and silhouette.`;
+    textPrompt += `\n\n=== IN-AND-OUT PROTOCOL ===\nPreserve pixel-perfect branding, silhouette, and every surface detail. The product must be IDENTICAL to the reference — only the environment changes.`;
   }
 
   if (chatInput.trim()) {
-    textPrompt += `\n\n**USER CUSTOMIZATION**: ${chatInput}.`;
+    textPrompt += `\n\n=== USER CREATIVE DIRECTION ===\n${chatInput}`;
   }
 
   if (referenceImages.length > 0) {
@@ -66,25 +89,25 @@ Avoid sterile AI backgrounds. Ensure the product feels integrated into a real sp
     });
   }
   
-  parts.push({ text: textPrompt + `\n\nProduct Name/Context: ${productDescription || 'Preserve reference identity'}` });
+  parts.push({ text: textPrompt + `\n\nProduct Name/Context: ${productDescription || 'Analyze from reference images — preserve identity'}` });
 
   try {
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: GEMINI_TEXT_MODEL,
       contents: { parts: parts },
       config: { 
-        temperature: 0.8,
-        thinkingConfig: { thinkingBudget: 4000 }
+        temperature: 0.85,
+        thinkingConfig: { thinkingBudget: 6000 }
       },
     });
 
     const text = (response.text || "").replace(/\*/g, '');
     return text.split('\n')
       .map(line => line.trim())
-      .filter(line => line.length > 10)
+      .filter(line => line.length > 15)
       .slice(0, numPrompts);
   } catch (error) {
-    throw new Error("Erreur lors de la génération des scénarios.");
+    throw new Error("Error generating prompts. Please check your API key and try again.");
   }
 }
 
@@ -98,20 +121,28 @@ export async function generateImage(
   const ai = getGeminiClient(apiKey);
   const parts: Part[] = [];
   
-  let identityInstruction = `SUBJECT: Keep the EXACT object from the reference. Branding and shape must be 100% accurate. `;
+  const isPro = modelName === GEMINI_IMAGE_MODEL_PRO;
+  
+  let identityInstruction = isPro
+    ? `ELITE PRODUCT PHOTOGRAPHY MODE. You are generating for a premium e-commerce listing. SUBJECT INTEGRITY: The product from the reference must be reproduced with ZERO drift — every logo, label, texture, color, proportion, and surface detail must be pixel-perfect. `
+    : `PRODUCT PHOTOGRAPHY MODE. SUBJECT: Keep the EXACT object from the reference. Branding, shape, and materials must be 100% accurate. `;
+  
   if (imageConfig?.inAndOutMode) {
-    identityInstruction = `**IN-AND-OUT MODE**: Ensure zero drift on the product. SCENE: `;
-  } else {
-    identityInstruction += `SCENE: `;
+    identityInstruction += `IN-AND-OUT PROTOCOL: The product is SACRED — only the environment changes. `;
   }
+  identityInstruction += `SCENE: `;
+
+  const qualitySuffix = isPro
+    ? '. Shot on Phase One IQ4 150MP, ultra-sharp, hyper-realistic, professional studio lighting with subtle fill, natural color grading, realistic shadows and reflections, 8k resolution, cinematic depth of field, editorial product photography.'
+    : '. Hyper-realistic, professional lighting, natural environment, extremely detailed, 8k, realistic to death, sharp focus.';
 
   if (referenceImages.length > 0) {
-    parts.push({ text: (identityInstruction + prompt + ". Hyper-realistic, professional lighting, natural environment, extremely detailed, 8k, realistic to death.").replace(/\*/g, '') });
+    parts.push({ text: (identityInstruction + prompt + qualitySuffix).replace(/\*/g, '') });
     referenceImages.forEach(img => {
       parts.push({ inlineData: { data: img.data, mimeType: img.mimeType } });
     });
   } else {
-    parts.push({ text: (prompt + ". Ultra-realistic professional photography.").replace(/\*/g, '') });
+    parts.push({ text: (prompt + qualitySuffix).replace(/\*/g, '') });
   }
 
   try {

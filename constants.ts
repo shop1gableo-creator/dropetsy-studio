@@ -14,6 +14,81 @@ export const JPEG_COMPRESSION_QUALITY = 0.8;
 
 export const API_KEY_MISSING_MESSAGE = "API key missing.";
 
+export const SEO_IMAGE_POSITIONS = [
+  {
+    id: 'hero_shot',
+    label: 'Hero Shot',
+    emoji: '🎯',
+    prompt: 'Front-facing hero shot, centered composition, product perfectly aligned, clean background, professional studio lighting, ultra-sharp focus, premium look, high resolution, e-commerce hero image'
+  },
+  {
+    id: '45_angle',
+    label: '45° Angle Showcase',
+    emoji: '📐',
+    prompt: '45-degree angled view, dynamic perspective, soft shadows, realistic depth, premium product presentation, modern studio setup, clean background'
+  },
+  {
+    id: 'side_left',
+    label: 'Side Profile (Left)',
+    emoji: '◀️',
+    prompt: 'Left side profile view, precise proportions, minimalist composition, realistic lighting, sharp edges, product isolated on neutral background'
+  },
+  {
+    id: 'side_right',
+    label: 'Side Profile (Right)',
+    emoji: '▶️',
+    prompt: 'Right side profile view, clean silhouette, studio lighting, accurate materials, high clarity, professional catalog style'
+  },
+  {
+    id: 'top_view',
+    label: 'Top View / Flat Lay',
+    emoji: '⬇️',
+    prompt: 'Top-down flat lay view, perfectly aligned, symmetrical composition, soft ambient light, clean surface, editorial product photography style'
+  },
+  {
+    id: 'ultra_closeup',
+    label: 'Ultra Close-Up (Texture)',
+    emoji: '🔍',
+    prompt: 'Ultra close-up macro shot, detailed texture, visible material grain, sharp focus, realistic reflections, premium craftsmanship emphasis'
+  },
+  {
+    id: 'detail_focus',
+    label: 'Detail Focus (Functional)',
+    emoji: '⚙️',
+    prompt: 'Close-up detail shot focusing on functional elements, precision engineering, clean background, professional lighting, product feature highlight'
+  },
+  {
+    id: 'lifestyle',
+    label: 'Lifestyle Scene',
+    emoji: '🏠',
+    prompt: 'Lifestyle scene, product in real-world environment, natural lighting, realistic shadows, elegant modern setting, high-end interior design atmosphere'
+  },
+  {
+    id: 'luxury_editorial',
+    label: 'Luxury Editorial',
+    emoji: '💎',
+    prompt: 'Luxury editorial photography style, marble or premium surface, dramatic lighting, soft shadows, cinematic mood, high-end brand aesthetic'
+  },
+  {
+    id: 'dark_premium',
+    label: 'Dark Background Premium',
+    emoji: '🖤',
+    prompt: 'Product on dark background, dramatic contrast, rim lighting, premium cinematic look, high clarity, luxury branding style'
+  },
+  {
+    id: 'exploded_view',
+    label: 'Exploded / Detail View',
+    emoji: '🔧',
+    prompt: 'Technical showcase view, separated or emphasized components, clean layout, high clarity, professional product visualization style'
+  },
+  {
+    id: 'ultra_zoom_dof',
+    label: 'Ultra Zoom + Depth of Field',
+    emoji: '📸',
+    prompt: 'Extreme zoom shot with shallow depth of field, sharp focus on key detail, blurred background, cinematic realism, premium macro photography'
+  }
+];
+
 export const STYLE_MATRIX = [
   {
     id: 'premium_luxury',

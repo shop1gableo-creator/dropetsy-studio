@@ -141,7 +141,7 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-[#0a0a0a] text-[#f5f5f5] overflow-hidden">
+    <div className="h-screen flex flex-col bg-[#0a0a0a] text-[#f5f5f5] overflow-hidden animate-fade-in">
       <TopNavBar
         activeNav={activeNav}
         setActiveNav={setActiveNav}
