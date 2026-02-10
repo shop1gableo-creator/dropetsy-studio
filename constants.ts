@@ -14,6 +14,36 @@ export const JPEG_COMPRESSION_QUALITY = 0.8;
 
 export const API_KEY_MISSING_MESSAGE = "API key missing.";
 
+export const RESOLUTIONS = [
+  { id: '1k', label: '1K', pixels: '1024×1024', desc: 'Standard' },
+  { id: '2k', label: '2K', pixels: '2048×2048', desc: 'High-Res' },
+  { id: '4k', label: '4K', pixels: '4096×4096', desc: 'Ultra HD' },
+] as const;
+
+export type ResolutionId = typeof RESOLUTIONS[number]['id'];
+
+export const IMAGE_PRICING: Record<string, Record<ResolutionId, number>> = {
+  [GEMINI_IMAGE_MODEL_FLASH]: {
+    '1k': 0.039,
+    '2k': 0.079,
+    '4k': 0.000, // not supported
+  },
+  [GEMINI_IMAGE_MODEL_PRO]: {
+    '1k': 0.070,
+    '2k': 0.134,
+    '4k': 0.240,
+  },
+};
+
+export const getImagePrice = (model: string, resolution: ResolutionId): number => {
+  return IMAGE_PRICING[model]?.[resolution] ?? 0;
+};
+
+export const formatPrice = (price: number): string => {
+  if (price === 0) return 'N/A';
+  return `$${price.toFixed(3)}`;
+};
+
 export const SEO_IMAGE_POSITIONS = [
   {
     id: 'hero_shot',

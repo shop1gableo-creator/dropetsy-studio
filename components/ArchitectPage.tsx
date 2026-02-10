@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { STYLE_MATRIX, GEMINI_IMAGE_MODEL_FLASH, GEMINI_IMAGE_MODEL_PRO } from '../constants';
+import { STYLE_MATRIX, GEMINI_IMAGE_MODEL_FLASH, GEMINI_IMAGE_MODEL_PRO, RESOLUTIONS, ResolutionId, getImagePrice, formatPrice } from '../constants';
 import { generatePrompts } from '../services/geminiService';
 import { UploadedImage, GeneratedImage } from '../types';
 import LoadingSpinner from './LoadingSpinner';
@@ -26,14 +26,16 @@ interface ArchitectPageProps {
   savedPrompts: string[];
   savedPromptModels: string[];
   savedPromptCounts: number[];
+  savedPromptResolutions: ResolutionId[];
   onPromptsChange: (p: string[]) => void;
   onPromptModelsChange: (m: string[]) => void;
   onPromptCountsChange: (c: number[]) => void;
+  onPromptResolutionsChange: (r: ResolutionId[]) => void;
 }
 
 const ArchitectPage: React.FC<ArchitectPageProps> = ({
   userApiKey, isApiKeyValid, refImages, onImageUpload, onRemoveImage, onGenerateImages, generatedImages, isGenerating,
-  onDeleteGenImage, onResetAll, savedPrompts, savedPromptModels, savedPromptCounts, onPromptsChange, onPromptModelsChange, onPromptCountsChange
+  onDeleteGenImage, onResetAll, savedPrompts, savedPromptModels, savedPromptCounts, savedPromptResolutions, onPromptsChange, onPromptModelsChange, onPromptCountsChange, onPromptResolutionsChange
 }) => {
   const [dataInput, setDataInput] = useState('');
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
@@ -48,6 +50,8 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
   const setGeneratedPrompts = onPromptsChange;
   const setPromptModels = onPromptModelsChange;
   const setPromptCounts = onPromptCountsChange;
+  const promptResolutions = savedPromptResolutions;
+  const setPromptResolutions = onPromptResolutionsChange;
   const [selectedImgIndex, setSelectedImgIndex] = useState<number | null>(null);
 
   const nextImage = () => {
@@ -91,6 +95,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
       setGeneratedPrompts(res);
       setPromptModels(res.map(() => GEMINI_IMAGE_MODEL_FLASH));
       setPromptCounts(res.map(() => 1));
+      setPromptResolutions(res.map(() => '1k' as ResolutionId));
     } catch (e: any) {
       alert(e.message || 'Error generating prompts');
     } finally {
@@ -117,12 +122,24 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
   const totalImages = promptCounts.reduce((s, c) => s + c, 0);
 
+  const totalCost = generatedPrompts.reduce((sum, _, i) => {
+    const model = promptModels[i] || GEMINI_IMAGE_MODEL_FLASH;
+    const res = promptResolutions[i] || '1k';
+    const count = promptCounts[i] || 1;
+    const price = getImagePrice(model, res);
+    return sum + (price * count);
+  }, 0);
+
   const setAllModels = (model: string) => {
     setPromptModels(prev => prev.map(() => model));
   };
 
   const setAllCounts = (count: number) => {
     setPromptCounts(prev => prev.map(() => count));
+  };
+
+  const setAllResolutions = (res: ResolutionId) => {
+    setPromptResolutions(prev => prev.map(() => res));
   };
 
   return (
@@ -236,20 +253,29 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
         {/* Prompts Section (appears after generation) */}
         {generatedPrompts.length > 0 && (
           <div className="border-b border-white/[0.06] p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
                 <h3 className="text-[13px] font-medium text-white/70">Prompts</h3>
                 <span className="text-[11px] text-white/20 bg-white/[0.04] px-2.5 py-0.5 rounded-full">{generatedPrompts.length} prompts · {totalImages} images</span>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 items-center">
                 <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_FLASH)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Flash</button>
                 <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_PRO)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Pro</button>
-                <div className="flex gap-1 ml-1">
-                  {[1, 2, 3, 4].map(n => (
-                    <button key={n} onClick={() => setAllCounts(n)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{n}x</button>
-                  ))}
-                </div>
+                <div className="w-px h-4 bg-white/[0.06]"></div>
+                {RESOLUTIONS.map(r => (
+                  <button key={r.id} onClick={() => setAllResolutions(r.id)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{r.label}</button>
+                ))}
+                <div className="w-px h-4 bg-white/[0.06]"></div>
+                {[1, 2, 3, 4].map(n => (
+                  <button key={n} onClick={() => setAllCounts(n)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{n}x</button>
+                ))}
               </div>
+            </div>
+
+            {/* Pricing estimate */}
+            <div className="flex items-center gap-4 mb-4 px-1">
+              <span className="text-[10px] text-white/15">Estimated cost: <span className="text-emerald-400/60 font-medium">${totalCost.toFixed(2)}</span></span>
+              <span className="text-[10px] text-white/10">Flash 1K $0.039 · 2K $0.079 | Pro 1K $0.070 · 2K $0.134 · 4K $0.240</span>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 mb-4">
@@ -260,17 +286,32 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
                     <select
                       value={promptModels[i]}
                       onChange={e => { const next = [...promptModels]; next[i] = e.target.value; setPromptModels(next); }}
-                      className="flex-1 bg-black/30 border border-white/[0.06] rounded-lg px-2.5 py-1.5 text-[11px] text-white/70 cursor-pointer"
+                      className="bg-black/30 border border-white/[0.06] rounded-lg px-2 py-1.5 text-[10px] text-white/70 cursor-pointer"
                     >
                       <option value={GEMINI_IMAGE_MODEL_FLASH}>Flash</option>
                       <option value={GEMINI_IMAGE_MODEL_PRO}>Pro</option>
                     </select>
-                    <div className="flex gap-1">
+                    <div className="flex gap-0.5">
+                      {RESOLUTIONS.map(r => {
+                        const currentModel = promptModels[i] || GEMINI_IMAGE_MODEL_FLASH;
+                        const price = getImagePrice(currentModel, r.id);
+                        const disabled = price === 0;
+                        return (
+                          <button key={r.id} disabled={disabled} onClick={() => { const next = [...promptResolutions]; next[i] = r.id; setPromptResolutions(next); }}
+                            className={`px-1.5 py-1 rounded text-[9px] font-medium transition-all ${disabled ? 'text-white/10 cursor-not-allowed' : (promptResolutions[i] || '1k') === r.id ? 'bg-white/[0.12] text-white/80' : 'text-white/25 hover:text-white/50'}`}
+                            title={disabled ? 'Not available' : `${r.pixels} — ${formatPrice(price)}/img`}>
+                            {r.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <div className="flex gap-0.5">
                       {[1, 2, 3, 4].map(n => (
                         <button key={n} onClick={() => { const next = [...promptCounts]; next[i] = n; setPromptCounts(next); }}
-                          className={`w-7 h-7 rounded-lg text-[10px] font-medium transition-all ${promptCounts[i] === n ? 'bg-white text-black' : 'text-white/20 hover:text-white/40'}`}>{n}</button>
+                          className={`w-6 h-6 rounded text-[9px] font-medium transition-all ${promptCounts[i] === n ? 'bg-white text-black' : 'text-white/20 hover:text-white/40'}`}>{n}</button>
                       ))}
                     </div>
+                    <span className="text-[9px] text-emerald-400/50 ml-auto">{formatPrice(getImagePrice(promptModels[i] || GEMINI_IMAGE_MODEL_FLASH, promptResolutions[i] || '1k') * (promptCounts[i] || 1))}</span>
                   </div>
                 </div>
               ))}
@@ -278,7 +319,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
             <button onClick={handleExecute} disabled={isGenerating || !isApiKeyValid}
               className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
-              {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Rendering..." /> : `Generate ${totalImages} images`}
+              {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Rendering..." /> : `Generate ${totalImages} images · ~$${totalCost.toFixed(2)}`}
             </button>
           </div>
         )}

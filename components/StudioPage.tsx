@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { GEMINI_IMAGE_MODEL_FLASH, GEMINI_IMAGE_MODEL_PRO } from '../constants';
+import { GEMINI_IMAGE_MODEL_FLASH, GEMINI_IMAGE_MODEL_PRO, RESOLUTIONS, ResolutionId, getImagePrice, formatPrice } from '../constants';
 import { UploadedImage, GeneratedImage } from '../types';
 import LoadingSpinner from './LoadingSpinner';
 import Modal from './Modal';
@@ -23,7 +23,11 @@ const StudioPage: React.FC<StudioPageProps> = ({
 }) => {
   const [prompt, setPrompt] = useState('');
   const [engine, setEngine] = useState(GEMINI_IMAGE_MODEL_FLASH);
+  const [resolution, setResolution] = useState<ResolutionId>('1k');
   const [batchSize, setBatchSize] = useState(1);
+
+  const unitPrice = getImagePrice(engine, resolution);
+  const totalCost = unitPrice * batchSize;
   const [selectedImgIndex, setSelectedImgIndex] = useState<number | null>(null);
 
   const handleExecute = () => {
@@ -96,7 +100,7 @@ const StudioPage: React.FC<StudioPageProps> = ({
           <div className="mb-7">
             <span className="text-[12px] font-medium text-white/50 block mb-2.5">Engine</span>
             <div className="flex gap-2">
-              <button onClick={() => setEngine(GEMINI_IMAGE_MODEL_FLASH)}
+              <button onClick={() => { setEngine(GEMINI_IMAGE_MODEL_FLASH); if (resolution === '4k') setResolution('2k'); }}
                 className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium transition-all ${engine === GEMINI_IMAGE_MODEL_FLASH ? 'bg-white text-black' : 'bg-white/[0.03] text-white/30 border border-white/[0.06] hover:text-white/50'}`}>
                 Flash
               </button>
@@ -107,8 +111,29 @@ const StudioPage: React.FC<StudioPageProps> = ({
             </div>
           </div>
 
-          {/* Batch Size */}
+          {/* Resolution */}
           <div className="mb-7">
+            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Resolution</span>
+            <div className="flex gap-1.5">
+              {RESOLUTIONS.map(r => {
+                const price = getImagePrice(engine, r.id);
+                const disabled = price === 0;
+                return (
+                  <button key={r.id} disabled={disabled}
+                    onClick={() => setResolution(r.id)}
+                    className={`flex-1 py-2.5 rounded-xl text-[12px] font-medium transition-all relative ${disabled ? 'opacity-20 cursor-not-allowed text-white/20' : resolution === r.id ? 'bg-white text-black' : 'bg-white/[0.03] text-white/30 border border-white/[0.06] hover:text-white/50'}`}>
+                    <span>{r.label}</span>
+                    <span className={`block text-[9px] mt-0.5 ${resolution === r.id ? 'text-black/50' : 'text-white/15'}`}>
+                      {disabled ? 'N/A' : `${formatPrice(price)}/img`}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Batch Size */}
+          <div className="mb-5">
             <span className="text-[12px] font-medium text-white/50 block mb-2.5">Batch size</span>
             <div className="flex gap-1.5">
               {[1, 2, 3, 4].map(n => (
@@ -119,12 +144,23 @@ const StudioPage: React.FC<StudioPageProps> = ({
               ))}
             </div>
           </div>
+
+          {/* Cost estimate */}
+          <div className="mb-7 bg-white/[0.02] border border-white/[0.04] rounded-xl p-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] text-white/25">Estimated cost</span>
+              <span className="text-[12px] text-emerald-400/60 font-medium">{totalCost > 0 ? `$${totalCost.toFixed(3)}` : 'N/A'}</span>
+            </div>
+            <div className="mt-2 text-[9px] text-white/10 leading-relaxed">
+              Flash: 1K $0.039 · 2K $0.079 | Pro: 1K $0.070 · 2K $0.134 · 4K $0.240
+            </div>
+          </div>
         </div>
 
         <div className="p-7 pt-0">
           <button onClick={handleExecute} disabled={isGenerating || !isApiKeyValid || !prompt.trim()}
             className="w-full py-3 rounded-full text-[13px] font-medium bg-white text-black hover:bg-white/90 disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center justify-center">
-            {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Generating..." /> : 'Generate'}
+            {isGenerating ? <LoadingSpinner size="sm" color="text-black" message="Generating..." /> : `Generate ${batchSize > 1 ? batchSize + ' images' : ''} ${totalCost > 0 ? '· ~$' + totalCost.toFixed(3) : ''}`.trim()}
           </button>
         </div>
       </div>

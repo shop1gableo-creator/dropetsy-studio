@@ -10,7 +10,8 @@ import { generateImage, testSpecificApiKey } from './services/geminiService';
 import { 
     IMAGE_GENERATION_CONCURRENCY_LIMIT, 
     MAX_IMAGE_UPLOAD_SIZE_MB, 
-    GEMINI_IMAGE_MODEL_FLASH 
+    GEMINI_IMAGE_MODEL_FLASH,
+    ResolutionId
 } from './constants';
 import { GeneratedImage, UploadedImage } from './types';
 import { resizeImage } from './utils/imageUtils';
@@ -30,6 +31,7 @@ function App() {
   const [architectPrompts, setArchitectPrompts] = useState<string[]>([]);
   const [architectPromptModels, setArchitectPromptModels] = useState<string[]>([]);
   const [architectPromptCounts, setArchitectPromptCounts] = useState<number[]>([]);
+  const [architectPromptResolutions, setArchitectPromptResolutions] = useState<ResolutionId[]>([]);
 
   // Studio state
   const [studioRefImages, setStudioRefImages] = useState<UploadedImage[]>([]);
@@ -169,13 +171,15 @@ function App() {
           generatedImages={architectGenImages}
           isGenerating={isArchitectGenerating}
           onDeleteGenImage={(id) => setArchitectGenImages(prev => prev.filter(img => img.id !== id))}
-          onResetAll={() => { setArchitectRefImages([]); setArchitectGenImages([]); setArchitectPrompts([]); setArchitectPromptModels([]); setArchitectPromptCounts([]); }}
+          onResetAll={() => { setArchitectRefImages([]); setArchitectGenImages([]); setArchitectPrompts([]); setArchitectPromptModels([]); setArchitectPromptCounts([]); setArchitectPromptResolutions([]); }}
           savedPrompts={architectPrompts}
           savedPromptModels={architectPromptModels}
           savedPromptCounts={architectPromptCounts}
           onPromptsChange={setArchitectPrompts}
           onPromptModelsChange={setArchitectPromptModels}
           onPromptCountsChange={setArchitectPromptCounts}
+          savedPromptResolutions={architectPromptResolutions}
+          onPromptResolutionsChange={setArchitectPromptResolutions}
         />
       )}
 
