@@ -46,7 +46,7 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ isOpen, onClose, onSave, curr
         <div className="p-6 space-y-6">
           {/* API Key */}
           <div>
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">API Key</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">API Key</span>
             <div className="flex gap-2">
               <input
                 value={key}
@@ -69,14 +69,14 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ isOpen, onClose, onSave, curr
               </div>
             )}
 
-            <p className="mt-2 text-[11px] text-white/15">Stored locally. <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-white/30 hover:text-white/50 underline transition-colors">Get a key →</a></p>
+            <p className="mt-2 text-[11px] text-white/30">Stored locally. <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-white/70 underline transition-colors">Get a key →</a></p>
           </div>
 
           {/* Brand Brain */}
           <div>
             <div className="flex items-center justify-between mb-2.5">
-              <span className="text-[12px] font-medium text-white/50">Brand context</span>
-              <span className="text-[10px] text-white/15">optional</span>
+              <span className="text-[12px] font-medium text-white/60">Brand context</span>
+              <span className="text-[10px] text-white/30">optional</span>
             </div>
             <textarea
               value={brandBrain}
@@ -88,7 +88,7 @@ const ConfigModal: React.FC<ConfigModalProps> = ({ isOpen, onClose, onSave, curr
 
           {/* Language */}
           <div>
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Language</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Language</span>
             <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 flex items-center justify-between">
               <span className="text-[13px] text-white/70">English (US)</span>
               <svg className="w-4 h-4 text-white/15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3" strokeWidth="1.5" strokeLinecap="round"/></svg>

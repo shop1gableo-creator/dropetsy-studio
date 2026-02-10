@@ -20,7 +20,7 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ activeNav, setActiveNav, isApiKey
     <nav className="flex items-center justify-between h-14 px-8 border-b border-white/[0.06]">
       <button onClick={() => setActiveNav('Architect')} className="flex items-center gap-2">
         <span className="text-[15px] font-semibold text-white tracking-tight">Dropetsy</span>
-        <span className="text-[15px] font-light text-white/25 tracking-tight">.gab</span>
+        <span className="text-[15px] font-light text-white/40 tracking-tight">.gab</span>
       </button>
 
       <div className="flex items-center gap-1">
@@ -42,7 +42,7 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ activeNav, setActiveNav, isApiKey
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
           <div className={dotClass}></div>
-          <span className="text-[11px] text-white/25">{isApiKeyValid ? 'Connected' : 'No key'}</span>
+          <span className="text-[11px] text-white/40">{isApiKeyValid ? 'Connected' : 'No key'}</span>
         </div>
         <button
           onClick={onConfigClick}

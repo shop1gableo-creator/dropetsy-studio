@@ -52,7 +52,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
       <div className="relative z-10 text-center max-w-3xl px-6 pt-[12vh] pb-16">
         {/* LGCorporation */}
         <div className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-          <span className="inline-block text-[10px] font-semibold text-white/10 tracking-[0.3em] uppercase border border-white/[0.06] rounded-full px-4 py-1.5 mb-10">
+          <span className="inline-block text-[10px] font-semibold text-white/30 tracking-[0.3em] uppercase border border-white/[0.1] rounded-full px-4 py-1.5 mb-10">
             LGCorporation
           </span>
         </div>
@@ -61,14 +61,14 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
         <h1 className="text-7xl md:text-[88px] font-bold text-white tracking-[-0.04em] mb-2 animate-fade-in-up leading-none" style={{ animationDelay: '0.3s' }}>
           Dropetsy
         </h1>
-        <p className="text-[13px] font-medium text-white/15 tracking-[0.15em] mb-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+        <p className="text-[13px] font-medium text-white/35 tracking-[0.15em] mb-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
           STUDIO
         </p>
         
-        <p className="text-xl md:text-2xl font-light text-white/40 mb-4 tracking-tight leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
+        <p className="text-xl md:text-2xl font-light text-white/60 mb-4 tracking-tight leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
           Turn any product into a best-seller.
         </p>
-        <p className="text-[15px] text-white/20 mb-12 max-w-lg mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+        <p className="text-[15px] text-white/40 mb-12 max-w-lg mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           AI-powered product photography, intelligent prompts, and Etsy-optimized SEO listings — all in one studio. Upload your product, and watch the magic happen.
         </p>
 
@@ -83,7 +83,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
               <path d="M5 12h14m-6-6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </button>
-          <p className="text-[11px] text-white/10 mt-4">Free to use — bring your own Gemini API key</p>
+          <p className="text-[11px] text-white/30 mt-4">Free to use — bring your own Gemini API key</p>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
             >
               <span className="text-2xl block mb-3">{f.icon}</span>
               <h3 className="text-[13px] font-semibold text-white/80 mb-1.5">{f.title}</h3>
-              <p className="text-[11px] text-white/25 leading-relaxed">{f.desc}</p>
+              <p className="text-[11px] text-white/40 leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>
@@ -107,7 +107,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
       {/* ═══ How it works ═══ */}
       <div className="relative z-10 w-full max-w-3xl px-6 pb-16">
         <div className="animate-fade-in-up" style={{ animationDelay: '1.5s' }}>
-          <h2 className="text-center text-[11px] font-medium text-white/15 tracking-[0.25em] uppercase mb-8">How it works</h2>
+          <h2 className="text-center text-[11px] font-medium text-white/35 tracking-[0.25em] uppercase mb-8">How it works</h2>
           <div className="flex items-center justify-center gap-4 md:gap-8">
             {[
               { step: '01', label: 'Upload product photos' },
@@ -115,10 +115,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
               { step: '03', label: 'Render images + SEO' },
             ].map((s, i) => (
               <div key={s.step} className="flex items-center gap-3 md:gap-4">
-                {i > 0 && <div className="w-8 h-px bg-white/[0.06]"></div>}
+                {i > 0 && <div className="w-8 h-px bg-white/[0.12]"></div>}
                 <div className="text-center">
-                  <span className="block text-[10px] font-bold text-white/10 mb-1">{s.step}</span>
-                  <span className="text-[12px] text-white/30">{s.label}</span>
+                  <span className="block text-[10px] font-bold text-white/30 mb-1">{s.step}</span>
+                  <span className="text-[12px] text-white/50">{s.label}</span>
                 </div>
               </div>
             ))}
@@ -128,7 +128,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
 
       {/* ═══ Tech bar ═══ */}
       <div className="relative z-10 w-full max-w-2xl px-6 pb-10 animate-fade-in-up" style={{ animationDelay: '1.7s' }}>
-        <div className="flex items-center justify-center gap-6 flex-wrap text-[11px] text-white/10">
+        <div className="flex items-center justify-center gap-6 flex-wrap text-[11px] text-white/30">
           <div className="flex items-center gap-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/40"></div>
             <span>Gemini Flash</span>
@@ -149,7 +149,7 @@ const LandingPage: React.FC<LandingPageProps> = ({ onEnter }) => {
 
       {/* ═══ Footer ═══ */}
       <div className="relative z-10 pb-8 animate-fade-in-up" style={{ animationDelay: '1.9s' }}>
-        <p className="text-[10px] text-white/[0.08] tracking-[0.2em] uppercase">
+        <p className="text-[10px] text-white/25 tracking-[0.2em] uppercase">
           Built by LGCorporation
         </p>
       </div>

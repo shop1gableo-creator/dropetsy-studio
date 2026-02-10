@@ -62,14 +62,14 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-semibold text-white">Blueprints</h2>
             {(ficheProduitImageBase64 || seoResult) && (
-              <button onClick={() => { onResetAll(); setProductName(''); setSeoResult(null); setEditableTitle(''); setEditableDescription(''); setEditableTags(''); }} className="text-[11px] text-white/20 hover:text-red-400/70 transition-colors">New product</button>
+              <button onClick={() => { onResetAll(); setProductName(''); setSeoResult(null); setEditableTitle(''); setEditableDescription(''); setEditableTags(''); }} className="text-[11px] text-white/35 hover:text-red-400/70 transition-colors">New product</button>
             )}
           </div>
-          <p className="text-[13px] text-white/30 mb-8">Generate an optimized Etsy listing.</p>
+          <p className="text-[13px] text-white/45 mb-8">Generate an optimized Etsy listing.</p>
 
           {/* Image upload */}
           <div className="mb-7">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Product image</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Product image</span>
             <div className="border border-dashed border-white/10 rounded-xl p-5 text-center hover:border-white/20 transition-all">
               {ficheProduitImageBase64 ? (
                 <img src={`data:${ficheProduitImageMimeType};base64,${ficheProduitImageBase64}`} className="max-h-40 mx-auto rounded-lg mb-3" alt="" />
@@ -78,7 +78,7 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
                   <svg className="w-8 h-8 mx-auto text-white/10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                 </div>
               )}
-              <label className="cursor-pointer text-[12px] text-white/30 hover:text-white/60 transition-colors">
+              <label className="cursor-pointer text-[12px] text-white/40 hover:text-white/70 transition-colors">
                 {ficheProduitImageBase64 ? 'Change image' : 'Select image'}
                 <input type="file" className="hidden" accept="image/*" onChange={e => onImageUpload(e.target.files)} />
               </label>
@@ -87,7 +87,7 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
 
           {/* Product name */}
           <div className="mb-7">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Product context <span className="text-white/15">optional</span></span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Product context <span className="text-white/30">optional</span></span>
             <input
               value={productName}
               onChange={e => setProductName(e.target.value)}
@@ -98,7 +98,7 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
 
           {/* Info */}
           <div className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-4 mb-6">
-            <p className="text-[11px] text-white/25 leading-relaxed">
+            <p className="text-[11px] text-white/40 leading-relaxed">
               AI researches real specs from marketplaces. Generates SEO title, storytelling description, 13 tags, and FAQ.
             </p>
           </div>
@@ -119,7 +119,7 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-[15px] font-semibold text-white">Listing output</h3>
-                <p className="text-[12px] text-white/25 mt-0.5">Etsy-optimized</p>
+                <p className="text-[12px] text-white/40 mt-0.5">Etsy-optimized</p>
               </div>
               <button onClick={handleCopyAll} className="px-4 py-2 rounded-full text-[11px] font-medium bg-white/[0.06] text-white/50 hover:bg-white/[0.1] hover:text-white/70 transition-all">
                 {copyStatus === 'all' ? 'Copied ✓' : 'Copy all'}
@@ -129,8 +129,8 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
             {/* Title */}
             <div className="bg-[#111] border border-white/[0.04] rounded-xl p-5 mb-3">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-medium text-white/30">Title</span>
-                <button onClick={() => handleCopy(editableTitle, 'title')} className="text-[11px] text-white/20 hover:text-white/50 transition-colors">
+                <span className="text-[11px] font-medium text-white/45">Title</span>
+                <button onClick={() => handleCopy(editableTitle, 'title')} className="text-[11px] text-white/35 hover:text-white/55 transition-colors">
                   {copyStatus === 'title' ? 'Copied ✓' : 'Copy'}
                 </button>
               </div>
@@ -141,8 +141,8 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
             {/* Description */}
             <div className="bg-[#111] border border-white/[0.04] rounded-xl p-5 mb-3">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-medium text-white/30">Description & FAQ</span>
-                <button onClick={() => handleCopy(editableDescription, 'desc')} className="text-[11px] text-white/20 hover:text-white/50 transition-colors">
+                <span className="text-[11px] font-medium text-white/45">Description & FAQ</span>
+                <button onClick={() => handleCopy(editableDescription, 'desc')} className="text-[11px] text-white/35 hover:text-white/55 transition-colors">
                   {copyStatus === 'desc' ? 'Copied ✓' : 'Copy'}
                 </button>
               </div>
@@ -153,8 +153,8 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
             {/* Tags */}
             <div className="bg-[#111] border border-white/[0.04] rounded-xl p-5">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[11px] font-medium text-white/30">13 Etsy tags</span>
-                <button onClick={() => handleCopy(editableTags, 'tags')} className="text-[11px] text-white/20 hover:text-white/50 transition-colors">
+                <span className="text-[11px] font-medium text-white/45">13 Etsy tags</span>
+                <button onClick={() => handleCopy(editableTags, 'tags')} className="text-[11px] text-white/35 hover:text-white/55 transition-colors">
                   {copyStatus === 'tags' ? 'Copied ✓' : 'Copy'}
                 </button>
               </div>
@@ -164,7 +164,7 @@ const BlueprintsPage: React.FC<BlueprintsPageProps> = ({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-[14px] text-white/10">Upload an image to start</p>
+            <p className="text-[14px] text-white/25">Upload an image to start</p>
           </div>
         )}
       </div>

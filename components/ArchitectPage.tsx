@@ -150,16 +150,16 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
           <div className="flex items-center justify-between mb-1">
             <h2 className="text-lg font-semibold text-white">Architect</h2>
             {(generatedPrompts.length > 0 || generatedImages.length > 0 || refImages.length > 0) && (
-              <button onClick={() => { onResetAll(); setDataInput(''); setSelectedStyles([]); setCustomDA(''); }} className="text-[11px] text-white/20 hover:text-red-400/70 transition-colors">New product</button>
+              <button onClick={() => { onResetAll(); setDataInput(''); setSelectedStyles([]); setCustomDA(''); }} className="text-[11px] text-white/35 hover:text-red-400/70 transition-colors">New product</button>
             )}
           </div>
-          <p className="text-[13px] text-white/30 mb-8">Configure your product shoot.</p>
+          <p className="text-[13px] text-white/45 mb-8">Configure your product shoot.</p>
 
           {/* Visual Assets */}
           <div className="mb-7">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[12px] font-medium text-white/50">Reference images</span>
-              <span className="text-[11px] text-white/20">{refImages.length}</span>
+              <span className="text-[12px] font-medium text-white/60">Reference images</span>
+              <span className="text-[11px] text-white/35">{refImages.length}</span>
             </div>
             <div className="flex flex-wrap gap-2.5">
               {refImages.map(img => (
@@ -179,18 +179,18 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
           {/* Data Input */}
           <div className="mb-7">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Product details</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Product details</span>
             <textarea
               value={dataInput}
               onChange={e => setDataInput(e.target.value)}
               placeholder="Describe your product..."
-              className="w-full h-24 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/15 resize-none focus:border-[#2563eb]"
+              className="w-full h-24 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3 text-[13px] text-white/90 placeholder-white/20 resize-none focus:border-[#2563eb]"
             />
           </div>
 
           {/* Style Matrix */}
           <div className="mb-7">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Design aesthetic</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Design aesthetic</span>
             <div className="space-y-1">
               {STYLE_MATRIX.map(style => (
                 <button
@@ -199,7 +199,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
                   className={`w-full text-left px-3.5 py-2 rounded-lg text-[12px] transition-all ${
                     selectedStyles.includes(style.id)
                       ? 'bg-white/[0.08] text-white font-medium'
-                      : 'text-white/30 hover:text-white/50 hover:bg-white/[0.02]'
+                      : 'text-white/40 hover:text-white/60 hover:bg-white/[0.02]'
                   }`}
                 >
                   {style.label}
@@ -210,7 +210,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
           {/* Custom DA */}
           <div className="mb-7">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Custom directive <span className="text-white/15">optional</span></span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Custom directive <span className="text-white/30">optional</span></span>
             <textarea
               value={customDA}
               onChange={e => setCustomDA(e.target.value)}
@@ -221,7 +221,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
 
           {/* Prompt count */}
           <div className="mb-8">
-            <span className="text-[12px] font-medium text-white/50 block mb-2.5">Number of prompts</span>
+            <span className="text-[12px] font-medium text-white/60 block mb-2.5">Number of prompts</span>
             <div className="flex gap-1.5 flex-wrap">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
                 <button
@@ -230,7 +230,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
                   className={`w-9 h-9 rounded-lg text-[12px] font-medium transition-all ${
                     numPrompts === n
                       ? 'bg-white text-black'
-                      : 'text-white/25 hover:text-white/50 hover:bg-white/[0.04]'
+                      : 'text-white/35 hover:text-white/55 hover:bg-white/[0.04]'
                   }`}
                 >
                   {n}
@@ -256,32 +256,32 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-3">
                 <h3 className="text-[13px] font-medium text-white/70">Prompts</h3>
-                <span className="text-[11px] text-white/20 bg-white/[0.04] px-2.5 py-0.5 rounded-full">{generatedPrompts.length} prompts · {totalImages} images</span>
+                <span className="text-[11px] text-white/35 bg-white/[0.04] px-2.5 py-0.5 rounded-full">{generatedPrompts.length} prompts · {totalImages} images</span>
               </div>
               <div className="flex gap-2 items-center">
                 <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_FLASH)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Flash</button>
                 <button onClick={() => setAllModels(GEMINI_IMAGE_MODEL_PRO)} className="px-3 py-1.5 rounded-lg text-[11px] font-medium bg-white/[0.04] text-white/50 border border-white/[0.06] hover:bg-white/[0.08] transition-all">All Pro</button>
                 <div className="w-px h-4 bg-white/[0.06]"></div>
                 {RESOLUTIONS.map(r => (
-                  <button key={r.id} onClick={() => setAllResolutions(r.id)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{r.label}</button>
+                  <button key={r.id} onClick={() => setAllResolutions(r.id)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/35 hover:text-white/55 hover:bg-white/[0.03] transition-all">{r.label}</button>
                 ))}
                 <div className="w-px h-4 bg-white/[0.06]"></div>
                 {[1, 2, 3, 4].map(n => (
-                  <button key={n} onClick={() => setAllCounts(n)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/25 hover:text-white/50 hover:bg-white/[0.03] transition-all">{n}x</button>
+                  <button key={n} onClick={() => setAllCounts(n)} className="px-2 py-1.5 rounded-lg text-[10px] text-white/35 hover:text-white/55 hover:bg-white/[0.03] transition-all">{n}x</button>
                 ))}
               </div>
             </div>
 
             {/* Pricing estimate */}
             <div className="flex items-center gap-4 mb-4 px-1">
-              <span className="text-[10px] text-white/15">Estimated cost: <span className="text-emerald-400/60 font-medium">${totalCost.toFixed(2)}</span></span>
-              <span className="text-[10px] text-white/10">Flash 1K $0.039 · 2K $0.079 | Pro 1K $0.070 · 2K $0.134 · 4K $0.240</span>
+              <span className="text-[10px] text-white/30">Estimated cost: <span className="text-emerald-400/70 font-medium">${totalCost.toFixed(2)}</span></span>
+              <span className="text-[10px] text-white/25">Flash 1K $0.039 · 2K $0.079 | Pro 1K $0.070 · 2K $0.134 · 4K $0.240</span>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-2 mb-4">
               {generatedPrompts.map((prompt, i) => (
                 <div key={i} className="bg-white/[0.02] border border-white/[0.04] rounded-xl p-3.5 hover:border-white/[0.08] transition-all">
-                  <p className="text-[11px] text-white/40 leading-relaxed mb-3 line-clamp-2">{prompt}</p>
+                  <p className="text-[11px] text-white/50 leading-relaxed mb-3 line-clamp-2">{prompt}</p>
                   <div className="flex items-center gap-2">
                     <select
                       value={promptModels[i]}
@@ -311,7 +311,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
                           className={`w-6 h-6 rounded text-[9px] font-medium transition-all ${promptCounts[i] === n ? 'bg-white text-black' : 'text-white/20 hover:text-white/40'}`}>{n}</button>
                       ))}
                     </div>
-                    <span className="text-[9px] text-emerald-400/50 ml-auto">{formatPrice(getImagePrice(promptModels[i] || GEMINI_IMAGE_MODEL_FLASH, promptResolutions[i] || '1k') * (promptCounts[i] || 1))}</span>
+                    <span className="text-[9px] text-emerald-400/70 ml-auto">{formatPrice(getImagePrice(promptModels[i] || GEMINI_IMAGE_MODEL_FLASH, promptResolutions[i] || '1k') * (promptCounts[i] || 1))}</span>
                   </div>
                 </div>
               ))}
@@ -353,7 +353,7 @@ const ArchitectPage: React.FC<ArchitectPageProps> = ({
           </div>
         ) : generatedPrompts.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-[14px] text-white/10">No images yet</p>
+            <p className="text-[14px] text-white/25">No images yet</p>
           </div>
         ) : null}
       </div>
