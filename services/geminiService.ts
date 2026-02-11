@@ -49,59 +49,61 @@ NEVER use sterile studio backgrounds. The product must feel INTEGRATED into a re
     `${i + 1}. ${pos.label}: ${pos.prompt}`
   ).join('\n');
 
-  let textPrompt = `You are an expert product photographer specialized in handmade, artisanal, and Etsy-style product photography.
+  let textPrompt = `You are an elite Etsy product photographer. You create images that make buyers CLICK and BUY. Your photos look like they belong on the front page of Etsy — colorful, inviting, perfectly composed, with real environments and beautiful light.
 
 Your absolute priority is TOTAL RESPECT of the product provided. Generate exactly ${numPrompts} unique, highly detailed image prompts for the product shown in the reference images.
 
-=== MASTER SEO IMAGE POSITIONS (use these as your framework) ===
+=== MASTER SEO IMAGE POSITIONS (pick ${numPrompts} diverse ones from this pool) ===
 ${seoPositionsRef}
 
-=== STRICT RULES — NON-NEGOTIABLE ===
+=== CRITICAL: MAXIMUM VARIETY ===
+Every single prompt MUST be visually DIFFERENT from the others:
+- Different ANGLE each time (front, 45°, side, top-down, close-up, in-use)
+- Different MOOD each time (bright summer, golden hour, cozy evening, luxury, minimal, outdoor, gift)
+- Different SURFACE each time (wood, marble, linen, stone, shelf, hands, garden)
+- Different COLOR TEMPERATURE (warm golden, bright daylight, soft morning, intimate evening)
+- The product must ALWAYS be well-centered and be the star of the image
+- Each image must make someone want to BUY the product immediately
 
-PRODUCT INTEGRITY (SACRED):
+=== PRODUCT INTEGRITY (SACRED — NON-NEGOTIABLE) ===
 - NEVER modify the product shape, proportions, materials, colors, logos, or any detail
 - NEVER add or remove elements from the product itself
-- NEVER stylize or redesign the product — it must be a FAITHFUL and EXACT reproduction
-- The product must remain IDENTICAL to the reference in every single image
-
-REALISTIC SCALE:
-- ALWAYS maintain realistic size — compare mentally to surrounding objects
-- NEVER artificially enlarge or shrink the product
-- Objects around the product must be proportionally correct
-
-PHYSICAL COHERENCE:
+- The product must be a FAITHFUL and EXACT reproduction of the reference
+- ALWAYS maintain realistic size compared to surrounding objects
 - Respect gravity — no floating objects
-- Shadows must be consistent with a single main light source
-- Realistic perspective — no impossible angles
+- Shadows consistent with a single main light source
 - No optical distortion, no fisheye, no stretched zoom
 
-MANDATORY VISUAL STYLE:
-- Handmade, artisanal, Etsy lifestyle, natural, warm, authentic
-- Surfaces: natural wood, linen, stone, textured walls, real interiors
-- Lighting: ONLY natural diffused light, side window light, soft warm shadows
+=== VISUAL STYLE ===
+- Mix of: handmade artisanal, luxury premium, lifestyle, editorial, seasonal moods
+- Surfaces: natural wood, marble, linen, stone, textured walls, real interiors, outdoor settings
+- Lighting: natural light is king — window light, golden hour, bright daylight, soft evening glow
 - The product is ALWAYS the main subject. Decor is secondary and subtle.
-- Camera: 35mm or 50mm perspective, eye-level or slight angle, realistic depth of field
+- Camera: 35mm or 50mm, eye-level or slight angle, realistic depth of field
+- COLORS: vibrant, rich, inviting — not desaturated or flat
 
-ABSOLUTELY FORBIDDEN:
+=== ABSOLUTELY FORBIDDEN ===
 - No empty black backgrounds
-- No generic Shopify/Amazon studio look
-- No harsh flash lighting
+- No generic Shopify/Amazon white studio look
+- No harsh flash lighting or artificial studio lighting
 - No deformed macro shots
 - No fisheye or stretched effects
-- No ultra-commercial sterile renders
+- No sterile commercial renders — every image must feel REAL and AUTHENTIC
+- No placing the product in illogical locations (e.g. a necklace on a kitchen counter)
 
-PROMPT FORMAT:
-- Each prompt must be 40-80 words minimum
-- Include: lighting direction, surface material, atmosphere, color temperature, camera angle, depth of field
+=== PROMPT FORMAT ===
+- Each prompt: 40-80 words, highly detailed
+- Include: lighting direction, surface material, atmosphere, color temperature, camera angle, depth of field, mood
 - Return ONLY ${numPrompts} lines of plain text. NO numbering, NO bold, NO asterisks, NO markdown. One prompt per line.
 
 BACKGROUND CONTEXT: ${backgroundInstruction}
 
-=== PROMPT PATTERNS ===
-- "Product centered on [natural wood/linen/stone surface], natural window light from the left, warm tones, [cozy interior] slightly blurred in background, 50mm lens, handmade artisan photography"
-- "Close-up of [product detail] showing [texture/stitching/grain], soft natural light, shallow depth of field, emphasis on craftsmanship quality"
-- "[Product] in [real home setting], morning sunlight through curtains, warm atmosphere, plants and natural elements, authentic lifestyle Etsy photography"
-- "[Product] on [rustic shelf/vintage tray], surrounded by [dried flowers/books/natural props], soft diffused light, artisan boutique aesthetic"`;
+=== PROMPT PATTERNS (mix these styles) ===
+- "Product perfectly centered on [marble/wood/linen], [golden hour/morning/bright] natural light, [warm/fresh/rich] tones, [cozy interior/garden/terrace] background, 50mm lens, Etsy bestseller aesthetic"
+- "Close-up of [product detail] showing [texture/stitching/grain], soft natural light, shallow depth of field, the craftsmanship builds trust and desire"
+- "[Product] being [used/held/worn] by a person, [outdoor garden/cozy home/bright room], natural daylight, authentic lifestyle, the product is the clear hero"
+- "[Product] in [summer sunlit room/evening candlelit setting/luxury marble vanity], [vibrant/warm/intimate] atmosphere, scroll-stopping Etsy photography"
+- "[Product] presented as a gift with [ribbon/wrapping/elegant display], warm light, inviting and desirable, premium unboxing feel"`;
 
   if (brandBrain && brandBrain.trim()) {
     textPrompt += `\n\n=== BRAND CONTEXT (respect this) ===\n${brandBrain}`;
@@ -156,17 +158,17 @@ export async function generateImage(
   const isPro = modelName === GEMINI_IMAGE_MODEL_PRO;
   
   let identityInstruction = isPro
-    ? `HANDMADE PRODUCT PHOTOGRAPHY — PREMIUM MODE. ABSOLUTE RULES: The product from the reference must be reproduced with ZERO modification — every logo, label, texture, color, proportion, material, and surface detail must be pixel-perfect identical. NEVER modify, stylize, or redesign the product. NEVER add or remove elements from the product. Maintain realistic scale compared to surrounding objects. Respect gravity — no floating objects. Shadows consistent with a single natural light source. `
-    : `HANDMADE PRODUCT PHOTOGRAPHY MODE. SACRED RULE: The product must be an EXACT faithful reproduction of the reference — shape, color, material, proportions, logos, every detail identical. NEVER modify the product. Maintain realistic scale. No floating objects. Single natural light source with consistent shadows. `;
+    ? `ELITE ETSY PRODUCT PHOTOGRAPHY — PREMIUM MODE. SACRED RULES: The product from the reference must be reproduced with ZERO modification — every logo, label, texture, color, proportion, material, and surface detail must be pixel-perfect identical. NEVER modify, stylize, or redesign the product. NEVER add or remove elements from the product. Maintain realistic scale compared to surrounding objects. Respect gravity — no floating objects. Shadows consistent with a single natural light source. No placing the product in illogical locations. `
+    : `ETSY PRODUCT PHOTOGRAPHY MODE. SACRED RULE: The product must be an EXACT faithful reproduction of the reference — shape, color, material, proportions, logos, every detail identical. NEVER modify the product. Maintain realistic scale. No floating objects. Single natural light source with consistent shadows. No illogical placement. `;
   
   if (imageConfig?.inAndOutMode) {
     identityInstruction += `IN-AND-OUT PROTOCOL: The product is SACRED and UNTOUCHABLE — only the environment changes. `;
   }
-  identityInstruction += `MANDATORY STYLE: Handmade, artisanal, Etsy lifestyle. Natural diffused light only (window light, no flash). Surfaces: natural wood, linen, stone. Real cozy interior, not a studio. No black backgrounds, no Shopify/Amazon generic look, no harsh lighting, no fisheye, no distortion. The product is the main subject, decor is secondary and subtle. 35mm or 50mm perspective. SCENE: `;
+  identityInstruction += `STYLE: The image must look like a real photograph taken by a professional Etsy seller — NOT a Shopify studio production shot. Natural light is king. The product must be well-centered and be the star. Use real environments: cozy homes, natural surfaces (wood, marble, linen, stone), gardens, lifestyle settings. Colors should be vibrant and inviting. No empty black backgrounds, no generic white studio, no harsh flash, no fisheye, no distortion. 35mm or 50mm perspective. SCENE: `;
 
   const qualitySuffix = isPro
-    ? '. Natural diffused window light, warm tones, realistic shadows from single light source, handmade artisan photography, real interior environment, 50mm lens perspective, shallow depth of field, authentic Etsy lifestyle aesthetic, hyper-realistic, 8k resolution.'
-    : '. Natural window light, warm cozy atmosphere, realistic shadows, handmade artisan feel, real interior background, 50mm lens, authentic Etsy lifestyle photography, hyper-realistic, sharp focus.';
+    ? '. Natural light, vibrant rich colors, realistic shadows, real environment not a studio, product perfectly centered, 50mm lens, shallow depth of field, the image makes you want to buy this product immediately, Etsy bestseller photography, hyper-realistic, 8k resolution.'
+    : '. Natural light, vibrant colors, realistic shadows, real environment, product centered, 50mm lens, scroll-stopping Etsy photography, hyper-realistic, sharp focus.';
 
   if (referenceImages.length > 0) {
     parts.push({ text: (identityInstruction + prompt + qualitySuffix).replace(/\*/g, '') });
