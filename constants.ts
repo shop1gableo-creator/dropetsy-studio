@@ -49,73 +49,73 @@ export const SEO_IMAGE_POSITIONS = [
     id: 'hero_shot',
     label: 'Hero Shot',
     emoji: '🎯',
-    prompt: 'Front-facing hero shot, centered composition, product perfectly aligned, clean background, professional studio lighting, ultra-sharp focus, premium look, high resolution, e-commerce hero image'
+    prompt: 'Front-facing hero shot on natural wood surface, centered composition, soft diffused natural light from a side window, warm tones, product perfectly aligned, realistic shadows, handmade artisan feel, real interior background slightly blurred'
   },
   {
     id: '45_angle',
     label: '45° Angle Showcase',
     emoji: '📐',
-    prompt: '45-degree angled view, dynamic perspective, soft shadows, realistic depth, premium product presentation, modern studio setup, clean background'
+    prompt: '45-degree angled view on a linen cloth or raw wood table, natural window light, soft warm shadows, realistic depth, artisanal product presentation, cozy interior background, 50mm lens perspective'
   },
   {
     id: 'side_left',
     label: 'Side Profile (Left)',
     emoji: '◀️',
-    prompt: 'Left side profile view, precise proportions, minimalist composition, realistic lighting, sharp edges, product isolated on neutral background'
+    prompt: 'Left side profile view on a stone or wooden shelf, natural daylight, precise proportions, warm neutral background with subtle texture, realistic shadows consistent with single light source'
   },
   {
     id: 'side_right',
     label: 'Side Profile (Right)',
     emoji: '▶️',
-    prompt: 'Right side profile view, clean silhouette, studio lighting, accurate materials, high clarity, professional catalog style'
+    prompt: 'Right side profile view, placed on a natural surface like oak or marble, soft lateral natural light, accurate materials and proportions, warm cozy atmosphere, real room background'
   },
   {
     id: 'top_view',
     label: 'Top View / Flat Lay',
     emoji: '⬇️',
-    prompt: 'Top-down flat lay view, perfectly aligned, symmetrical composition, soft ambient light, clean surface, editorial product photography style'
+    prompt: 'Top-down flat lay on a linen tablecloth or raw wood surface, surrounded by small natural props like dried flowers or a sprig of eucalyptus, soft ambient daylight, warm tones, artisan lifestyle photography'
   },
   {
     id: 'ultra_closeup',
     label: 'Ultra Close-Up (Texture)',
     emoji: '🔍',
-    prompt: 'Ultra close-up macro shot, detailed texture, visible material grain, sharp focus, realistic reflections, premium craftsmanship emphasis'
+    prompt: 'Close-up shot showing material texture and craftsmanship details, visible grain or stitching, natural soft light, shallow depth of field, 50mm macro perspective, emphasis on handmade quality'
   },
   {
     id: 'detail_focus',
-    label: 'Detail Focus (Functional)',
+    label: 'Detail Focus (Craftsmanship)',
     emoji: '⚙️',
-    prompt: 'Close-up detail shot focusing on functional elements, precision engineering, clean background, professional lighting, product feature highlight'
+    prompt: 'Close-up detail shot focusing on handmade craftsmanship elements, natural light highlighting texture, warm tones, blurred cozy background, artisan workshop feel'
   },
   {
     id: 'lifestyle',
     label: 'Lifestyle Scene',
     emoji: '🏠',
-    prompt: 'Lifestyle scene, product in real-world environment, natural lighting, realistic shadows, elegant modern setting, high-end interior design atmosphere'
+    prompt: 'Product naturally placed in a real cozy home interior, natural sunlight streaming through a window, wooden furniture, plants, linen textiles, warm and authentic atmosphere, the product feels lived-in and integrated'
   },
   {
-    id: 'luxury_editorial',
-    label: 'Luxury Editorial',
+    id: 'warm_editorial',
+    label: 'Warm Editorial',
     emoji: '💎',
-    prompt: 'Luxury editorial photography style, marble or premium surface, dramatic lighting, soft shadows, cinematic mood, high-end brand aesthetic'
+    prompt: 'Editorial lifestyle photography, product on a natural stone or wooden surface, warm morning golden hour light, soft bokeh background with plants or books, high-end artisan boutique aesthetic'
   },
   {
-    id: 'dark_premium',
-    label: 'Dark Background Premium',
-    emoji: '🖤',
-    prompt: 'Product on dark background, dramatic contrast, rim lighting, premium cinematic look, high clarity, luxury branding style'
+    id: 'cozy_mood',
+    label: 'Cozy Mood Shot',
+    emoji: '�️',
+    prompt: 'Warm cozy atmosphere, product on a textured surface near a window with soft curtains, warm color temperature, natural shadows, candle or dried flowers nearby, intimate handmade boutique feeling'
   },
   {
-    id: 'exploded_view',
-    label: 'Exploded / Detail View',
-    emoji: '🔧',
-    prompt: 'Technical showcase view, separated or emphasized components, clean layout, high clarity, professional product visualization style'
+    id: 'in_use',
+    label: 'In-Use / Context',
+    emoji: '🤲',
+    prompt: 'Product shown in realistic use context, natural environment, warm daylight, authentic and relatable scene, the product is the clear subject but feels naturally placed, lifestyle Etsy photography'
   },
   {
-    id: 'ultra_zoom_dof',
-    label: 'Ultra Zoom + Depth of Field',
+    id: 'artisan_display',
+    label: 'Artisan Display',
     emoji: '📸',
-    prompt: 'Extreme zoom shot with shallow depth of field, sharp focus on key detail, blurred background, cinematic realism, premium macro photography'
+    prompt: 'Product displayed on a rustic wooden shelf or vintage tray, surrounded by complementary natural elements, soft diffused window light, shallow depth of field, warm tones, handmade market stall aesthetic'
   }
 ];
 

@@ -39,9 +39,9 @@ export async function generatePrompts(
   let backgroundInstruction = backgroundContext;
   if (backgroundContext.includes("automatically analyzed")) {
     backgroundInstruction = `ANALYZE PRODUCT FIRST: Detect product category, materials, size, target audience. 
-CREATE CONTEXT: Design environments that are "realistic to death". 
-Use descriptors like "natural sunlight streaming through window", "soft window bokeh", "organic high-end Scandinavian home", "authentic artisan workshop", "warm morning kitchen counter", "premium marble vanity". 
-Avoid sterile AI backgrounds. The product must feel INTEGRATED into a real space. Cinematic hyper-realism.`;
+CREATE CONTEXT: Design environments that feel like a REAL artisan home or workshop. 
+Use descriptors like "natural sunlight streaming through linen curtains", "soft window bokeh", "warm wooden kitchen counter", "rustic oak shelf", "cozy living room with plants", "handmade workshop table". 
+NEVER use sterile studio backgrounds. The product must feel INTEGRATED into a real, lived-in space. Handmade authenticity.`;
   }
 
   // Build the SEO positions reference for the AI
@@ -49,27 +49,59 @@ Avoid sterile AI backgrounds. The product must feel INTEGRATED into a real space
     `${i + 1}. ${pos.label}: ${pos.prompt}`
   ).join('\n');
 
-  let textPrompt = `You are an ELITE Etsy product photographer and SEO visual strategist. You create prompts that generate images which SELL on Etsy, Amazon, and Shopify.
+  let textPrompt = `You are an expert product photographer specialized in handmade, artisanal, and Etsy-style product photography.
 
-Generate exactly ${numPrompts} unique, highly detailed image prompts for the product shown in the reference images.
+Your absolute priority is TOTAL RESPECT of the product provided. Generate exactly ${numPrompts} unique, highly detailed image prompts for the product shown in the reference images.
 
 === MASTER SEO IMAGE POSITIONS (use these as your framework) ===
 ${seoPositionsRef}
 
-=== ABSOLUTE RULES ===
-1. PRODUCT IDENTITY: The subject MUST remain 100% identical — every logo, texture, color, shape, and material. ZERO creative liberty on the product itself.
-2. ULTRA-REALISM: Every image must look like it was shot by a $5000/day photographer. "Realistic to death" — real shadows, real reflections, real light behavior.
-3. STRATEGIC VARIETY: Distribute prompts across different SEO positions above. Each prompt = different angle, different mood, different conversion intent.
-4. LONG & DETAILED: Each prompt must be 40-80 words minimum. Include lighting direction, surface material, atmosphere, color temperature, camera angle, depth of field.
-5. ETSY-OPTIMIZED: Think about what makes a buyer CLICK and BUY. Hero shots for thumbnails, lifestyle for emotional connection, close-ups for trust.
-6. BACKGROUND CONTEXT: ${backgroundInstruction}
-7. FORMAT: Return ONLY ${numPrompts} lines of plain text prompts. NO numbering, NO bold, NO asterisks, NO markdown. One prompt per line.
+=== STRICT RULES — NON-NEGOTIABLE ===
 
-=== PROVEN PROMPT PATTERNS ===
-- "Product centered on [surface], [lighting type], [atmosphere], [camera angle], [lens effect], professional product photography, 8k, hyper-detailed"
-- "Close-up of [product feature] showing [material texture], [lighting], shallow depth of field, macro lens, premium craftsmanship"
-- "[Product] in [lifestyle setting], [time of day lighting], [mood], editorial photography, high-end magazine aesthetic"
-- "[Product] on [dark/light surface], [dramatic/soft] lighting, rim light highlighting [feature], luxury branding style"`;
+PRODUCT INTEGRITY (SACRED):
+- NEVER modify the product shape, proportions, materials, colors, logos, or any detail
+- NEVER add or remove elements from the product itself
+- NEVER stylize or redesign the product — it must be a FAITHFUL and EXACT reproduction
+- The product must remain IDENTICAL to the reference in every single image
+
+REALISTIC SCALE:
+- ALWAYS maintain realistic size — compare mentally to surrounding objects
+- NEVER artificially enlarge or shrink the product
+- Objects around the product must be proportionally correct
+
+PHYSICAL COHERENCE:
+- Respect gravity — no floating objects
+- Shadows must be consistent with a single main light source
+- Realistic perspective — no impossible angles
+- No optical distortion, no fisheye, no stretched zoom
+
+MANDATORY VISUAL STYLE:
+- Handmade, artisanal, Etsy lifestyle, natural, warm, authentic
+- Surfaces: natural wood, linen, stone, textured walls, real interiors
+- Lighting: ONLY natural diffused light, side window light, soft warm shadows
+- The product is ALWAYS the main subject. Decor is secondary and subtle.
+- Camera: 35mm or 50mm perspective, eye-level or slight angle, realistic depth of field
+
+ABSOLUTELY FORBIDDEN:
+- No empty black backgrounds
+- No generic Shopify/Amazon studio look
+- No harsh flash lighting
+- No deformed macro shots
+- No fisheye or stretched effects
+- No ultra-commercial sterile renders
+
+PROMPT FORMAT:
+- Each prompt must be 40-80 words minimum
+- Include: lighting direction, surface material, atmosphere, color temperature, camera angle, depth of field
+- Return ONLY ${numPrompts} lines of plain text. NO numbering, NO bold, NO asterisks, NO markdown. One prompt per line.
+
+BACKGROUND CONTEXT: ${backgroundInstruction}
+
+=== PROMPT PATTERNS ===
+- "Product centered on [natural wood/linen/stone surface], natural window light from the left, warm tones, [cozy interior] slightly blurred in background, 50mm lens, handmade artisan photography"
+- "Close-up of [product detail] showing [texture/stitching/grain], soft natural light, shallow depth of field, emphasis on craftsmanship quality"
+- "[Product] in [real home setting], morning sunlight through curtains, warm atmosphere, plants and natural elements, authentic lifestyle Etsy photography"
+- "[Product] on [rustic shelf/vintage tray], surrounded by [dried flowers/books/natural props], soft diffused light, artisan boutique aesthetic"`;
 
   if (brandBrain && brandBrain.trim()) {
     textPrompt += `\n\n=== BRAND CONTEXT (respect this) ===\n${brandBrain}`;
@@ -124,17 +156,17 @@ export async function generateImage(
   const isPro = modelName === GEMINI_IMAGE_MODEL_PRO;
   
   let identityInstruction = isPro
-    ? `ELITE PRODUCT PHOTOGRAPHY MODE. You are generating for a premium e-commerce listing. SUBJECT INTEGRITY: The product from the reference must be reproduced with ZERO drift — every logo, label, texture, color, proportion, and surface detail must be pixel-perfect. `
-    : `PRODUCT PHOTOGRAPHY MODE. SUBJECT: Keep the EXACT object from the reference. Branding, shape, and materials must be 100% accurate. `;
+    ? `HANDMADE PRODUCT PHOTOGRAPHY — PREMIUM MODE. ABSOLUTE RULES: The product from the reference must be reproduced with ZERO modification — every logo, label, texture, color, proportion, material, and surface detail must be pixel-perfect identical. NEVER modify, stylize, or redesign the product. NEVER add or remove elements from the product. Maintain realistic scale compared to surrounding objects. Respect gravity — no floating objects. Shadows consistent with a single natural light source. `
+    : `HANDMADE PRODUCT PHOTOGRAPHY MODE. SACRED RULE: The product must be an EXACT faithful reproduction of the reference — shape, color, material, proportions, logos, every detail identical. NEVER modify the product. Maintain realistic scale. No floating objects. Single natural light source with consistent shadows. `;
   
   if (imageConfig?.inAndOutMode) {
-    identityInstruction += `IN-AND-OUT PROTOCOL: The product is SACRED — only the environment changes. `;
+    identityInstruction += `IN-AND-OUT PROTOCOL: The product is SACRED and UNTOUCHABLE — only the environment changes. `;
   }
-  identityInstruction += `SCENE: `;
+  identityInstruction += `MANDATORY STYLE: Handmade, artisanal, Etsy lifestyle. Natural diffused light only (window light, no flash). Surfaces: natural wood, linen, stone. Real cozy interior, not a studio. No black backgrounds, no Shopify/Amazon generic look, no harsh lighting, no fisheye, no distortion. The product is the main subject, decor is secondary and subtle. 35mm or 50mm perspective. SCENE: `;
 
   const qualitySuffix = isPro
-    ? '. Shot on Phase One IQ4 150MP, ultra-sharp, hyper-realistic, professional studio lighting with subtle fill, natural color grading, realistic shadows and reflections, 8k resolution, cinematic depth of field, editorial product photography.'
-    : '. Hyper-realistic, professional lighting, natural environment, extremely detailed, 8k, realistic to death, sharp focus.';
+    ? '. Natural diffused window light, warm tones, realistic shadows from single light source, handmade artisan photography, real interior environment, 50mm lens perspective, shallow depth of field, authentic Etsy lifestyle aesthetic, hyper-realistic, 8k resolution.'
+    : '. Natural window light, warm cozy atmosphere, realistic shadows, handmade artisan feel, real interior background, 50mm lens, authentic Etsy lifestyle photography, hyper-realistic, sharp focus.';
 
   if (referenceImages.length > 0) {
     parts.push({ text: (identityInstruction + prompt + qualitySuffix).replace(/\*/g, '') });
