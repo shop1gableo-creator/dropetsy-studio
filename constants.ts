@@ -171,7 +171,7 @@ export const STYLE_MATRIX = [
   {
     id: 'premium_luxury',
     label: 'Premium Luxury',
-    prompt: 'A high-end luxury lounge featuring polished white Calacatta marble floors with deep grey veining. Accents of brushed gold on the furniture legs and wall moldings. Large floor-to-ceiling windows showing a sunset city skyline. Soft ambient warm lighting, cinematic composition, 8k resolution, elegant and opulent.'
+    prompt: 'An upscale artisan boutique featuring reclaimed wood floors with natural character. Accents of brushed brass on display shelves and vintage fixtures. Warm ambient lighting from handmade ceramic lamps. Soft luxury textiles, curated artisan products, high-end craft market aesthetic, sophisticated yet approachable, 8k resolution, elegant and authentic.'
   },
   {
     id: 'natural_wood',
