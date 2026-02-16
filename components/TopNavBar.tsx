@@ -19,8 +19,8 @@ const TopNavBar: React.FC<TopNavBarProps> = ({ activeNav, setActiveNav, isApiKey
   return (
     <nav className="flex items-center justify-between h-14 px-8 border-b border-white/[0.06]">
       <button onClick={() => setActiveNav('Architect')} className="flex items-center gap-2">
-        <span className="text-[15px] font-semibold text-white tracking-tight">Dropetsy</span>
-        <span className="text-[15px] font-light text-white/40 tracking-tight">.gab</span>
+        <span className="text-[15px] font-semibold text-white tracking-tight">LG</span>
+        <span className="text-[15px] font-light text-white/60 tracking-tight">Corporation</span>
       </button>
 
       <div className="flex items-center gap-1">
